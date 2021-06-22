@@ -1,8 +1,6 @@
-type ButtonProps = {
-    children?:string
-}
-export const Button = (props: ButtonProps)=>{
-    return(
-        <button>{props.children}</button>
-    )
-}
+import { ButtonHTMLAttributes } from "react";
+import "../styles/button.scss";
+
+export const Button = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
+  return <button className="button" {...props}></button>;
+};

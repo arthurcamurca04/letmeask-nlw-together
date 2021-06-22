@@ -1,10 +1,14 @@
-import { Button } from "./components/Button";
+import { BrowserRouter, Route } from "react-router-dom";
+
+import { Home } from "./pages/Home";
+import { NewRoom } from "./pages/NewRoom";
+import "./styles/global.scss";
+
 export const App = () => {
   return (
-    <div>
-      <Button>Clique em mim 1</Button>
-      <Button>Clique em mim 2</Button>
-      <Button>Clique em mim 3</Button>
-    </div>
+    <BrowserRouter>
+      <Route path="/" component={Home} exact />
+      <Route path="/rooms/new" component={NewRoom} />
+    </BrowserRouter>
   );
 };
