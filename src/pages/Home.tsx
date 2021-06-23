@@ -5,16 +5,35 @@ import googleIconImg from "../assets/images/google-icon.svg";
 import "../styles/auth.scss";
 import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
+import { FormEvent, useState } from "react";
+import { database } from "../services/firebase";
 
 export const Home = () => {
   const history = useHistory();
   const { user, signInWithGoogle } = useAuth();
+  const [roomCode, setRoomCode] = useState('');
 
   async function handleCreateRoom() {
     if (!user) {
       await signInWithGoogle();
     }
     history.push("/rooms/new");
+  }
+
+  async function hancleJoinRoom(e: FormEvent){
+    e.preventDefault();
+    if(roomCode.trim() === ''){
+      return;
+    }
+    const roomRef = await database.ref(`/rooms/${roomCode}`).get();
+
+    if(!roomRef.exists()){
+      alert("Room does not exists...");
+      return;
+    }
+
+    history.push(`/rooms/${roomCode}`);
+
   }
 
   return (
@@ -35,8 +54,8 @@ export const Home = () => {
             Crie sua sala com Google
           </button>
           <div className="separator">ou entre em um sala</div>
-          <form>
-            <input type="text" placeholder="Digito o código da sala" />
+          <form onSubmit={hancleJoinRoom}>
+            <input type="text" placeholder="Digito o código da sala" onChange={(e)=>setRoomCode(e.target.value)} value={roomCode}/>
             <Button type="submit">Entrar na sala</Button>
           </form>
         </div>
