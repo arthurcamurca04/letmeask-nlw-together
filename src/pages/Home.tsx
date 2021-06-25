@@ -11,7 +11,7 @@ import { database } from "../services/firebase";
 export const Home = () => {
   const history = useHistory();
   const { user, signInWithGoogle } = useAuth();
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCode] = useState("");
 
   async function handleCreateRoom() {
     if (!user) {
@@ -20,20 +20,24 @@ export const Home = () => {
     history.push("/rooms/new");
   }
 
-  async function hancleJoinRoom(e: FormEvent){
+  async function hancleJoinRoom(e: FormEvent) {
     e.preventDefault();
-    if(roomCode.trim() === ''){
+    if (roomCode.trim() === "") {
       return;
     }
     const roomRef = await database.ref(`/rooms/${roomCode}`).get();
 
-    if(!roomRef.exists()){
+    if (!roomRef.exists()) {
       alert("Room does not exists...");
       return;
     }
 
-    history.push(`/rooms/${roomCode}`);
+    if (roomRef.val().endedAt) {
+      alert("Room alredy closed");
+      return;
+    }
 
+    history.push(`/rooms/${roomCode}`);
   }
 
   return (
@@ -55,7 +59,12 @@ export const Home = () => {
           </button>
           <div className="separator">ou entre em um sala</div>
           <form onSubmit={hancleJoinRoom}>
-            <input type="text" placeholder="Digito o código da sala" onChange={(e)=>setRoomCode(e.target.value)} value={roomCode}/>
+            <input
+              type="text"
+              placeholder="Digito o código da sala"
+              onChange={(e) => setRoomCode(e.target.value)}
+              value={roomCode}
+            />
             <Button type="submit">Entrar na sala</Button>
           </form>
         </div>
